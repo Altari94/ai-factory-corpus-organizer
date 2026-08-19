@@ -4,3 +4,4 @@ pydantic
 python-dotenv
 pytest
 supabase==2.31.0
+openai==3.3.0

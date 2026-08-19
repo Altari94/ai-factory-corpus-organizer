@@ -1,8 +1,8 @@
 from uuid import UUID, uuid4
 
 from app.domain.episode_detection import BoundaryCandidate, BoundaryContext, BoundaryJudgeResult
+from app.ports.llm import LLMPort, LLMProviderError
 from app.domain.llm import LLMRequest, ModelProfile, PromptDefinition
-from app.ports.llm import LLMPort
 from app.services.execution_trace import ExecutionTraceService
 from app.services.prompt_builder import PromptBuilder
 from app.services.structured_output import StructuredOutputValidator
@@ -20,6 +20,7 @@ class LLMBoundaryJudge:
         self.prompt_builder = prompt_builder
         self.validator = validator
         self.trace_service = trace_service
+        self.last_trace = None
 
     def judge(
         self,
@@ -46,7 +47,11 @@ class LLMBoundaryJudge:
         prompt = self.prompt_builder.build(prompt_definition, candidate_chunk)
         request = LLMRequest(request_id=uuid4(), profile=profile, prompt=prompt, attempt=attempt)
         trace = self.trace_service.start(request, organizer_run_id)
-        response = self.llm.generate(request)
+        try:
+            response = self.llm.generate(request)
+        except LLMProviderError as error:
+            self.last_trace = self.trace_service.failed(trace, str(error))
+            raise
         try:
             decision = self.validator.validate(
                 response,
@@ -61,4 +66,5 @@ class LLMBoundaryJudge:
             self.trace_service.retryable_failure(trace, response, str(error))
             raise
         completed_trace = self.trace_service.succeed(trace, response, decision)
+        self.last_trace = completed_trace
         return BoundaryJudgeResult(decision=decision.decision, trace=completed_trace)

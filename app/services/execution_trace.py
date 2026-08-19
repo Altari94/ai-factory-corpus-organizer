@@ -58,3 +58,12 @@ class ExecutionTraceService:
                 "error": error,
             }
         )
+
+    def failed(self, trace: LLMExecutionTrace, error: str) -> LLMExecutionTrace:
+        return trace.model_copy(
+            update={
+                "finished_at": datetime.now(timezone.utc),
+                "status": LLMExecutionStatus.FAILED,
+                "error": error,
+            }
+        )

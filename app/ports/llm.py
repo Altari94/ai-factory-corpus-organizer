@@ -3,6 +3,10 @@ from typing import Protocol, runtime_checkable
 from app.domain.llm import LLMExecutionTrace, LLMRequest, LLMResponse, StructuredDecision
 
 
+class LLMProviderError(RuntimeError):
+    """Provider failure after bounded retries; never becomes a semantic decision."""
+
+
 @runtime_checkable
 class LLMPort(Protocol):
     """Provider-neutral boundary; no vendor client leaks into the domain."""
