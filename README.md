@@ -3,7 +3,7 @@
 Der Corpus Organizer ist der eigenständige F0.4-Service der AI Factory. Er
 bereitet den Canonical Corpus für spätere semantische Verarbeitung auf.
 
-## Aktueller Umfang: F0.4.0–F0.4.15
+## Aktueller Umfang: F0.4.0–F0.4.18
 
 F0.4.0 enthält ausschließlich das Service-Grundgerüst und die Anbindung an den
 stabilen Canonical Read Port aus F0.3:
@@ -34,12 +34,15 @@ stabilen Canonical Read Port aus F0.3:
 - konfigurierbares Episode-Retrieval und Similarity-Clustering
 - providerneutraler Relation-/Graph-/Topic-/Thread-Layer
 - repräsentative Cluster-Kontexte und rekursive Topic-Struktur
+- produktive OpenAI-Judges für Relation, Topic Naming und Cluster Coherence
+- persistente LLM-Traces, Evidence IDs und historisierte Semantic Runs
+- Corpus Catalogue als API-Read-Projektion (`/catalogue/{organizer_run_id}`)
+- versionierte Boundary-, Relation- und Topic-Evaluation inklusive Regression Gate
+- ausführbarer, operatorgesteuerter Real-Corpus-E2E-Abnahmetest
 
-Noch nicht enthalten ist eine produktive Embedding- oder LLM-Anbindung. Die
-InMemory-Adapter ermöglichen Tests ohne externe API-Aufrufe. Der Boundary Judge
-ist als Port/Adapter-Fluss vorbereitet; `UNCERTAIN` bleibt ein gültiges Ergebnis.
-Die intelligente Episodenerkennung baut auf algorithmischen Candidates und
-strukturierten Boundary Decisions auf.
+Die produktiven OpenAI-Adapter sind optional konfigurierbar und bleiben von der
+Domain entkoppelt. Die InMemory-Adapter ermöglichen weiterhin alle lokalen
+Tests ohne externe API-Aufrufe. `UNCERTAIN` bleibt ein gültiges Ergebnis.
 
 Die Vector-Tabelle verwendet in v1 bewusst einen dimensionsflexiblen
 `extensions.vector`-Typ. Dadurch können mehrere Profile und Modellversionen
@@ -62,6 +65,7 @@ uvicorn app.main:app --reload
 ```
 
 Danach ist der Health-Endpoint unter <http://127.0.0.1:8000/health> erreichbar.
+Die Swagger-UI ist unter <http://127.0.0.1:8000/docs> erreichbar.
 
 ## Tests
 
