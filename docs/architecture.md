@@ -21,6 +21,19 @@ Der Organizer kennt weder das ursprüngliche Dateiformat noch die Tabellen des
 F0.3-Speichers. Markdown und JSON müssen vor dem Read Port bereits denselben
 Canonical Contract liefern.
 
+## Persistence und Walking Skeleton
+
+`SemanticReadPort` und `SemanticWritePort` abstrahieren die Derived Data. Der
+InMemory-Adapter ist die Referenz für Contract Tests; der Supabase-Adapter liegt
+außerhalb des Domain-Cores. Die Migration in
+`supabase/migrations/20260819000000_create_semantic_persistence.sql` legt die
+Derived-Tabellen mit Foreign Keys und aktivierter RLS an.
+
+Der erste End-to-End-Pfad lädt mehrere Quellen, akzeptiert ausschließlich
+erfolgreiche kompatible Canonical Runs und erzeugt anschließend pro Canonical
+MESSAGE eine Episode. Jede Episode referenziert weiterhin ihre Canonical
+Document- und Unit-IDs.
+
 ## Semantic Contract v1
 
 `OrganizerRun` ist der Versions- und Provenienzrahmen für alle abgeleiteten

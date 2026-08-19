@@ -1,0 +1,78 @@
+{
+  "corpus_id": "golden-corpus-v1",
+  "version": "1.0.0",
+  "status": "DRAFT_GROUND_TRUTH",
+  "ground_truth_schema": {
+    "episode_boundaries": "ordered canonical message unit ids",
+    "topic_labels": "manually assigned labels",
+    "entity_labels": "manually assigned canonical entities",
+    "thread_links": "manually assigned cross-episode links",
+    "provenance_required": true
+  },
+  "cases": [
+    {
+      "case_id": "GC-001",
+      "source_title": "Blaulicht für Freiwillige",
+      "source_path": "ChatGPT Exporter/2026-08-04__Blaulicht-für-Freiwillige__6a71817f/conversation.md",
+      "sha256": "f2460897b1d45ac73216bb2346cca56e7382a11d3075cdb76aa26b8654788b01",
+      "difficulty_tags": ["external-research", "opinion-to-letter", "factual-constraints"],
+      "manual_annotation": {"status": "DRAFT", "expected_topics": ["volunteer_fire_brigade", "traffic_safety", "public_communication"], "expected_entities": ["NDR", "Freiwillige Feuerwehr"], "expected_thread_ids": [], "notes": "Boundary between personal proposal, researched facts and drafted output."}
+    },
+    {
+      "case_id": "GC-002",
+      "source_title": "PalEconomy Mod Entwicklung",
+      "source_path": "ChatGPT Exporter/2026-08-08__PalEconomy-Mod-Entwicklung__6a76e813/conversation.md",
+      "sha256": "4d9d616739535e8a547ff2c4c1f0738db88d2de2b3187f0ae5de7b448ab53624",
+      "difficulty_tags": ["long-running-design", "many-entities", "versioned-decisions"],
+      "manual_annotation": {"status": "DRAFT", "expected_topics": ["game_economy", "production", "progression"], "expected_entities": ["Palworld", "Bitcoin"], "expected_thread_ids": ["GC-THREAD-ECONOMY"], "notes": "Long design discussion with recurring concepts and evolving decisions."}
+    },
+    {
+      "case_id": "GC-003",
+      "source_title": "Stove und Händler Spawning",
+      "source_path": "ChatGPT Exporter/2026-08-08__Stove-und-Händler-Spawning__6a7794d0/conversation.md",
+      "sha256": "f0a521b8d931e93a7588d6b4946bb381455cd44096b33e6588f069d674f90f80",
+      "difficulty_tags": ["requirements-evolution", "implementation-detail", "cross-topic-reference"],
+      "manual_annotation": {"status": "DRAFT", "expected_topics": ["spawning", "traders", "gameplay_rules"], "expected_entities": ["Stove", "Händler"], "expected_thread_ids": ["GC-THREAD-ECONOMY"], "notes": "Implementation details refer back to broader economy and world rules."}
+    },
+    {
+      "case_id": "GC-004",
+      "source_title": "Schweden Anfrage Formulierung",
+      "source_path": "ChatGPT Exporter/2026-08-16__Schweden-Anfrage-Formulierung__6a81e30d/conversation.md",
+      "sha256": "2403cb0d0447c6a6b9a80791103580921a06573f48cd5718c721aa71cdaf0923",
+      "difficulty_tags": ["multimodal-input", "personal-data", "translation", "output-constraint"],
+      "manual_annotation": {"status": "DRAFT", "expected_topics": ["travel", "translation", "family"], "expected_entities": ["Schweden"], "expected_thread_ids": [], "notes": "Image-backed request with personal details and a constrained beginner-language output."}
+    },
+    {
+      "case_id": "GC-005",
+      "source_title": "Server-Projekt-Feedback",
+      "source_path": "ChatGPT Exporter/2026-08-06__Server-Projekt-Feedback__6a745fd2/conversation.md",
+      "sha256": "65c5f501ee75d5755e80711830e0711d717ca241b02829a4faddd533c7284136",
+      "difficulty_tags": ["large-design-document", "technical-architecture", "scope-control"],
+      "manual_annotation": {"status": "DRAFT", "expected_topics": ["server_architecture", "game_economy", "progression"], "expected_entities": ["Palworld", "SQLite", "UE4SS"], "expected_thread_ids": ["GC-THREAD-SERVER-DESIGN"], "notes": "Large specification-like chat with mixed product, architecture and implementation layers."}
+    },
+    {
+      "case_id": "GC-006",
+      "source_title": "Schnelle Mod Entwicklung UE4SS",
+      "source_path": "ChatGPT Exporter/2026-08-06__Schnelle-Mod-Entwicklung-UE4SS__6a74af11/conversation.md",
+      "sha256": "0237ffd518ef692a92587534a5c104dacc465cb5087af1cf9308a783a23144b4",
+      "difficulty_tags": ["technical-uncertainty", "implementation-options", "tooling-constraints"],
+      "manual_annotation": {"status": "DRAFT", "expected_topics": ["mod_development", "ue4ss", "automation"], "expected_entities": ["UE4SS", "Palworld"], "expected_thread_ids": ["GC-THREAD-SERVER-DESIGN"], "notes": "Separates confirmed implementation facts from proposed technical approaches."}
+    },
+    {
+      "case_id": "GC-007",
+      "source_title": "Notion Projektstruktur erstellen",
+      "source_path": "ChatGPT Exporter/2026-08-12__Notion-Projektstruktur-erstellen__6a7cc40d/conversation.md",
+      "sha256": "0cd3dba3941165547eb76f3d8a919e57667aeed8a1abd58527ed816ab2247b6f",
+      "difficulty_tags": ["knowledge-architecture", "hierarchy", "actionable-decisions"],
+      "manual_annotation": {"status": "DRAFT", "expected_topics": ["notion", "project_structure", "knowledge_management"], "expected_entities": ["Notion"], "expected_thread_ids": ["GC-THREAD-KNOWLEDGE"], "notes": "Boundary between durable structure, temporary tasks and organizational decisions."}
+    },
+    {
+      "case_id": "GC-008",
+      "source_title": "Tactical Space Sail Konzept",
+      "source_path": "ChatGPT Exporter/2026-08-14__Tactical-Space-Sail-Konzept__6a7ea67f/conversation.md",
+      "sha256": "7717dcd322e09d59a6877fcfdb029013b895554c20b5573e96dfb46a4dfd8547",
+      "difficulty_tags": ["creative-product-design", "rules-and-worldbuilding", "cross-topic-reference"],
+      "manual_annotation": {"status": "DRAFT", "expected_topics": ["game_design", "space_simulation", "tactical_systems"], "expected_entities": ["Tactical Space Sail"], "expected_thread_ids": ["GC-THREAD-GAME-DESIGN"], "notes": "Long-form concept work with nested rules, mechanics and product decisions."}
+    }
+  ]
+}

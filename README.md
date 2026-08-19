@@ -3,7 +3,7 @@
 Der Corpus Organizer ist der eigenständige F0.4-Service der AI Factory. Er
 bereitet den Canonical Corpus für spätere semantische Verarbeitung auf.
 
-## Aktueller Umfang: F0.4.0
+## Aktueller Umfang: F0.4.0–F0.4.4
 
 F0.4.0 enthält ausschließlich das Service-Grundgerüst und die Anbindung an den
 stabilen Canonical Read Port aus F0.3:
@@ -14,9 +14,16 @@ stabilen Canonical Read Port aus F0.3:
 - InMemory-Canonical-Adapter für Tests und lokale Entwicklung
 - Domain-Core ohne Supabase- und OpenAI-Abhängigkeit
 - versionierter Semantic Contract v1 für Organizer Runs und Derived Objects
+- `SemanticReadPort` und `SemanticWritePort`
+- InMemory- und Supabase-Adapter
+- reproduzierbare Supabase-Migration mit Foreign Keys und RLS
+- Walking Skeleton für mehrere Canonical Sources
+- Trivial Episode Detector ohne KI
+- versioniertes Golden-Corpus-Format
 
-Noch nicht enthalten sind Episodenerkennung, Persistenz, Embeddings, LLMs oder
-semantische Entscheidungen.
+Noch nicht enthalten sind intelligente Episodenerkennung, Embeddings, LLMs oder
+semantische Entscheidungen. Die aktuelle Episodenerkennung ist bewusst nur der
+Trivial Episode Detector: eine Canonical MESSAGE wird zu einer Episode.
 
 Die Modelle in `app/domain/semantic.py` definieren nur die Sprache der späteren
 semantischen Ergebnisse. Jedes Derived Object trägt eine

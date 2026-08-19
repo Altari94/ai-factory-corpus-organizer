@@ -3,3 +3,4 @@ uvicorn
 pydantic
 python-dotenv
 pytest
+supabase==2.31.0
