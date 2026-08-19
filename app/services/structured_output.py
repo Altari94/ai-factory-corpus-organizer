@@ -9,6 +9,8 @@ from app.domain.llm import (
     LLMResponse,
     RelationDecision,
     StructuredDecision,
+    TopicNamingDecision,
+    CoherenceDecision,
 )
 
 
@@ -30,11 +32,13 @@ class StructuredOutputValidator:
     ) -> StructuredDecision:
         try:
             payload = json.loads(response.raw_output)
-            decision = (
-                BoundaryDecision.model_validate(payload)
-                if task == ContextTask.BOUNDARY_JUDGE
-                else RelationDecision.model_validate(payload)
-            )
+            decision_type = {
+                ContextTask.BOUNDARY_JUDGE: BoundaryDecision,
+                ContextTask.RELATION_JUDGE: RelationDecision,
+                ContextTask.TOPIC_NAMING: TopicNamingDecision,
+                ContextTask.COHERENCE_JUDGE: CoherenceDecision,
+            }[task]
+            decision = decision_type.model_validate(payload)
         except (json.JSONDecodeError, ValidationError, TypeError) as exc:
             raise RetryableStructuredOutputError("Invalid structured LLM output") from exc
 
@@ -55,7 +59,11 @@ class StructuredOutputValidator:
         )
 
 
-def _decision_unit_ids(decision: BoundaryDecision | RelationDecision) -> list[UUID]:
+def _decision_unit_ids(decision) -> list[UUID]:
     if isinstance(decision, BoundaryDecision):
         return [decision.left_unit_id, decision.right_unit_id]
-    return [decision.from_unit_id, decision.to_unit_id]
+    if isinstance(decision, RelationDecision):
+        return [decision.from_unit_id, decision.to_unit_id]
+    if isinstance(decision, CoherenceDecision):
+        return list(decision.evidence_episode_ids)
+    return []

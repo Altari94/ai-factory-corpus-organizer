@@ -3,7 +3,7 @@
 Der Corpus Organizer ist der eigenständige F0.4-Service der AI Factory. Er
 bereitet den Canonical Corpus für spätere semantische Verarbeitung auf.
 
-## Aktueller Umfang: F0.4.0–F0.4.7
+## Aktueller Umfang: F0.4.0–F0.4.15
 
 F0.4.0 enthält ausschließlich das Service-Grundgerüst und die Anbindung an den
 stabilen Canonical Read Port aus F0.3:
@@ -30,6 +30,10 @@ stabilen Canonical Read Port aus F0.3:
 - begrenzter Boundary Context Builder
 - strukturierter LLM Boundary Judge inklusive Confidence, Evidence IDs und Trace
 - Episode Builder mit vollständiger, geordneter und nicht überlappender Unit-Zuordnung
+- Entity-Mentions mit Evidence IDs
+- konfigurierbares Episode-Retrieval und Similarity-Clustering
+- providerneutraler Relation-/Graph-/Topic-/Thread-Layer
+- repräsentative Cluster-Kontexte und rekursive Topic-Struktur
 
 Noch nicht enthalten ist eine produktive Embedding- oder LLM-Anbindung. Die
 InMemory-Adapter ermöglichen Tests ohne externe API-Aufrufe. Der Boundary Judge

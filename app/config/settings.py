@@ -15,6 +15,8 @@ class Settings(BaseModel):
     openai_timeout_seconds: float = 60.0
     openai_max_retries: int = 2
     openai_retry_base_seconds: float = 1.0
+    supabase_url: str | None = None
+    supabase_service_role_key: str | None = None
 
 
 @lru_cache
@@ -30,4 +32,10 @@ def get_settings() -> Settings:
         openai_timeout_seconds=float(os.getenv("OPENAI_TIMEOUT_SECONDS", "60")),
         openai_max_retries=int(os.getenv("OPENAI_MAX_RETRIES", "2")),
         openai_retry_base_seconds=float(os.getenv("OPENAI_RETRY_BASE_SECONDS", "1")),
+        supabase_url=os.getenv("SUPABASE_URL") or None,
+        supabase_service_role_key=(
+            os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+            or os.getenv("SUPABASE_SERVER_KEY")
+            or None
+        ),
     )

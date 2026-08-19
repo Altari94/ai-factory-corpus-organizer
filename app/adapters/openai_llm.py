@@ -96,21 +96,52 @@ def _schema_for(task: ContextTask) -> dict[str, object]:
                 "confidence",
             ],
         }
-    return {
-        "type": "object",
-        "additionalProperties": False,
-        "properties": {
-            "decision_type": {"type": "string", "enum": ["RELATION"]},
-            "from_unit_id": {"type": "string", "format": "uuid"},
-            "to_unit_id": {"type": "string", "format": "uuid"},
-            "relation_type": {"type": "string", "minLength": 1},
-            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-        },
-        "required": [
-            "decision_type",
-            "from_unit_id",
-            "to_unit_id",
-            "relation_type",
-            "confidence",
-        ],
-    }
+    if task == ContextTask.RELATION_JUDGE:
+        return {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "decision_type": {"type": "string", "enum": ["RELATION"]},
+                "from_unit_id": {"type": "string", "format": "uuid"},
+                "to_unit_id": {"type": "string", "format": "uuid"},
+                "relation_type": {
+                    "type": "string",
+                    "enum": ["SAME_THREAD", "RELATED", "UNRELATED", "UNCERTAIN"],
+                },
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+            },
+            "required": [
+                "decision_type",
+                "from_unit_id",
+                "to_unit_id",
+                "relation_type",
+                "confidence",
+            ],
+        }
+    if task == ContextTask.TOPIC_NAMING:
+        return {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "decision_type": {"type": "string", "enum": ["TOPIC_NAMING"]},
+                "cluster_id": {"type": "string", "format": "uuid"},
+                "topic_name": {"type": "string", "minLength": 1, "maxLength": 160},
+                "topic_description": {"type": "string", "minLength": 1, "maxLength": 1000},
+            },
+            "required": ["decision_type", "cluster_id", "topic_name", "topic_description"],
+        }
+    if task == ContextTask.COHERENCE_JUDGE:
+        return {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "decision_type": {"type": "string", "enum": ["COHERENCE"]},
+                "cluster_id": {"type": "string", "format": "uuid"},
+                "verdict": {"type": "string", "enum": ["KEEP", "SPLIT", "MERGE_CANDIDATE", "UNCERTAIN"]},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                "evidence_episode_ids": {"type": "array", "items": {"type": "string", "format": "uuid"}, "minItems": 1},
+                "needs_more_evidence": {"type": "boolean"},
+            },
+            "required": ["decision_type", "cluster_id", "verdict", "confidence", "evidence_episode_ids", "needs_more_evidence"],
+        }
+    raise ValueError(f"Unsupported LLM task: {task}")

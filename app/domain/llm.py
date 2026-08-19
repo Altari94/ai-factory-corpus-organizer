@@ -36,6 +36,8 @@ class ModelProfile(BaseModel):
 class ContextTask(StrEnum):
     BOUNDARY_JUDGE = "BOUNDARY_JUDGE"
     RELATION_JUDGE = "RELATION_JUDGE"
+    TOPIC_NAMING = "TOPIC_NAMING"
+    COHERENCE_JUDGE = "COHERENCE_JUDGE"
 
 
 class ContextSelectionConfig(BaseModel):
@@ -140,6 +142,26 @@ class RelationDecision(BaseModel):
     confidence: float = Field(ge=0, le=1)
 
 
+class TopicNamingDecision(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision_type: Literal["TOPIC_NAMING"] = "TOPIC_NAMING"
+    cluster_id: UUID
+    topic_name: str = Field(min_length=1, max_length=160)
+    topic_description: str = Field(min_length=1, max_length=1000)
+
+
+class CoherenceDecision(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision_type: Literal["COHERENCE"] = "COHERENCE"
+    cluster_id: UUID
+    verdict: Literal["KEEP", "SPLIT", "MERGE_CANDIDATE", "UNCERTAIN"]
+    confidence: float = Field(ge=0, le=1)
+    evidence_episode_ids: list[UUID] = Field(min_length=1)
+    needs_more_evidence: bool = False
+
+
 class StructuredDecision(BaseModel):
     """Validated result with model and prompt provenance attached."""
 
@@ -151,7 +173,7 @@ class StructuredDecision(BaseModel):
     prompt_version: str
     model_profile_id: str
     canonical_unit_ids: list[UUID]
-    decision: BoundaryDecision | RelationDecision
+    decision: BoundaryDecision | RelationDecision | TopicNamingDecision | CoherenceDecision
 
 
 class LLMExecutionStatus(StrEnum):

@@ -10,6 +10,10 @@ Modelle. Supabase-Clienttypen kommen nur im Adapter `app/adapters/` vor.
 
 - `InMemorySemanticAdapter`: lokale Entwicklung und Contract Tests
 - `SupabaseSemanticAdapter`: Persistenz in den F0.4-Derived-Tabellen
+- `build_supabase_semantic_adapters(Settings)`: produktiver Factory-Pfad für
+  Semantic Store und LLM-Trace Store. Er verwendet ausschließlich den
+  serverseitigen `SUPABASE_SERVICE_ROLE_KEY`; dieser gehört niemals in einen
+  Browser oder in Git.
 
 Beide Adapter speichern `OrganizerRun` und alle Derived Objects run-scoped.
 Historische Runs werden nicht überschrieben oder gelöscht.

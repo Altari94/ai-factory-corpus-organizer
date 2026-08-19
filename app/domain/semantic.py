@@ -64,6 +64,7 @@ class Entity(DerivedObject):
 class Topic(DerivedObject):
     topic_id: UUID
     label: str
+    description: str | None = None
     parent_topic_id: UUID | None = None
 
 
@@ -73,6 +74,7 @@ class EpisodeRelation(DerivedObject):
     to_episode_id: UUID
     relation_type: str
     confidence: float | None = Field(default=None, ge=0, le=1)
+    evidence_unit_ids: list[UUID] = Field(default_factory=list)
 
 
 class Thread(DerivedObject):
@@ -85,6 +87,7 @@ class EpisodeEntity(DerivedObject):
     link_id: UUID
     episode_id: UUID
     entity_id: UUID
+    evidence_unit_ids: list[UUID] = Field(default_factory=list)
 
 
 class EpisodeTopic(DerivedObject):
