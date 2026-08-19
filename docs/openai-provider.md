@@ -65,3 +65,25 @@ vor den LLM- und Embedding-Ports ergänzt. Er soll Namen, Kontaktdaten und
 andere personenbezogene Angaben durch stabile Platzhalter ersetzen. Der
 Canonical Originaltext bleibt dabei unverändert; geteilt wird nur die
 bereinigte Provider-Repräsentation.
+
+## F0.4.7a.10 Productive Persistence E2E
+
+Der synthetische E2E-Lauf wurde mit den produktiven Adaptern durchgeführt:
+
+```text
+synthetische Canonical Units
+  -> OpenAI Embeddings API
+  -> Supabase embeddings / pgvector
+  -> OpenAI Responses API mit gpt-5.6-luna
+  -> strukturierte Boundary Decisions
+  -> Episode Builder
+  -> Supabase Episodes, Memberships, Decisions und Traces
+```
+
+Dabei wurden neun synthetische Units, neun Embeddings, drei Episoden und neun
+Memberships persistiert. Beide Boundary-Entscheidungen waren `NEW_EPISODE`.
+Die Supabase-RPC-Similarity-Suche lieferte Ergebnisse, und der Run wurde als
+`SUCCEEDED` gespeichert. Ein zweiter synthetischer Lauf schrieb einen neuen
+Organizer Run; die Ergebnisse des ersten Runs blieben unverändert erhalten.
+
+Die Testdaten sind als `synthetic` und mit dem Gate `F0.4.7a.10` markiert.

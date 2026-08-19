@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.domain.llm import BoundaryDecision, ContextChunk, ContextUnit, LLMExecutionTrace
+from app.domain.llm import BoundaryDecision, ContextChunk, ContextUnit, LLMExecutionTrace, StructuredDecision
 from app.domain.semantic import Episode
 
 
@@ -35,6 +35,7 @@ class BoundaryContext(BaseModel):
 
 class BoundaryJudgeResult(BaseModel):
     decision: BoundaryDecision
+    structured_decision: StructuredDecision
     trace: LLMExecutionTrace
 
 
@@ -48,4 +49,3 @@ class EpisodeMembership(BaseModel):
 class EpisodeBuildResult(BaseModel):
     episodes: list[Episode]
     memberships: list[EpisodeMembership]
-

@@ -16,6 +16,7 @@ from app.domain.semantic import (
     Topic,
     TopicRelation,
 )
+from app.domain.episode_detection import EpisodeMembership
 
 
 class SupabaseSemanticAdapter:
@@ -29,6 +30,9 @@ class SupabaseSemanticAdapter:
 
     def write_episodes(self, episodes: Sequence[Episode]) -> None:
         self._insert("episodes", episodes)
+
+    def write_episode_memberships(self, memberships: Sequence[EpisodeMembership]) -> None:
+        self._insert("episode_memberships", memberships)
 
     def write_entities(self, entities: Sequence[Entity]) -> None:
         self._insert("entities", entities)

@@ -67,4 +67,8 @@ class LLMBoundaryJudge:
             raise
         completed_trace = self.trace_service.succeed(trace, response, decision)
         self.last_trace = completed_trace
-        return BoundaryJudgeResult(decision=decision.decision, trace=completed_trace)
+        return BoundaryJudgeResult(
+            decision=decision.decision,
+            structured_decision=decision,
+            trace=completed_trace,
+        )

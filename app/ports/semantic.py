@@ -15,6 +15,7 @@ from app.domain.semantic import (
     Topic,
     TopicRelation,
 )
+from app.domain.episode_detection import EpisodeMembership
 
 
 @runtime_checkable
@@ -24,6 +25,8 @@ class SemanticWritePort(Protocol):
     def create_run(self, run: OrganizerRun) -> None: ...
 
     def write_episodes(self, episodes: Sequence[Episode]) -> None: ...
+
+    def write_episode_memberships(self, memberships: Sequence[EpisodeMembership]) -> None: ...
 
     def write_entities(self, entities: Sequence[Entity]) -> None: ...
 

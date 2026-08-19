@@ -15,6 +15,7 @@ from app.domain.semantic import (
     Topic,
     TopicRelation,
 )
+from app.domain.episode_detection import EpisodeMembership
 
 
 class InMemorySemanticAdapter:
@@ -23,6 +24,7 @@ class InMemorySemanticAdapter:
     def __init__(self) -> None:
         self.runs: dict[UUID, OrganizerRun] = {}
         self.episodes: dict[UUID, Episode] = {}
+        self.episode_memberships: dict[tuple[UUID, UUID], EpisodeMembership] = {}
         self.entities: dict[UUID, Entity] = {}
         self.topics: dict[UUID, Topic] = {}
         self.episode_relations: dict[UUID, EpisodeRelation] = {}
@@ -39,6 +41,10 @@ class InMemorySemanticAdapter:
 
     def write_episodes(self, episodes: Sequence[Episode]) -> None:
         self._write(self.episodes, episodes, "episode_id")
+
+    def write_episode_memberships(self, memberships: Sequence[EpisodeMembership]) -> None:
+        for membership in memberships:
+            self.episode_memberships[(membership.episode_id, membership.canonical_unit_id)] = membership
 
     def write_entities(self, entities: Sequence[Entity]) -> None:
         self._write(self.entities, entities, "entity_id")
