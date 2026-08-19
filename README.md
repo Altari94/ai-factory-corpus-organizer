@@ -3,7 +3,7 @@
 Der Corpus Organizer ist der eigenständige F0.4-Service der AI Factory. Er
 bereitet den Canonical Corpus für spätere semantische Verarbeitung auf.
 
-## Aktueller Umfang: F0.4.0–F0.4.5
+## Aktueller Umfang: F0.4.0–F0.4.7
 
 F0.4.0 enthält ausschließlich das Service-Grundgerüst und die Anbindung an den
 stabilen Canonical Read Port aus F0.3:
@@ -24,10 +24,23 @@ stabilen Canonical Read Port aus F0.3:
 - versionierte Prompt Builder
 - provider-neutraler `LLMPort` mit InMemory-Testadapter
 - strukturierte Output-Validierung und Execution Traces
+- provider-neutraler Embedding-Port mit versionierbarem Vector Store
+- Supabase-Vector-Persistence über pgvector und RPC-Similarity Search
+- nachvollziehbare Boundary Candidates mit konfigurierbaren Signalen und Thresholds
+- begrenzter Boundary Context Builder
+- strukturierter LLM Boundary Judge inklusive Confidence, Evidence IDs und Trace
+- Episode Builder mit vollständiger, geordneter und nicht überlappender Unit-Zuordnung
 
-Noch nicht enthalten sind intelligente Episodenerkennung, Embeddings, LLMs oder
-semantische Entscheidungen. Die aktuelle Episodenerkennung ist bewusst nur der
-Trivial Episode Detector: eine Canonical MESSAGE wird zu einer Episode.
+Noch nicht enthalten ist eine produktive Embedding- oder LLM-Anbindung. Die
+InMemory-Adapter ermöglichen Tests ohne externe API-Aufrufe. Der Boundary Judge
+ist als Port/Adapter-Fluss vorbereitet; `UNCERTAIN` bleibt ein gültiges Ergebnis.
+Die intelligente Episodenerkennung baut auf algorithmischen Candidates und
+strukturierten Boundary Decisions auf.
+
+Die Vector-Tabelle verwendet in v1 bewusst einen dimensionsflexiblen
+`extensions.vector`-Typ. Dadurch können mehrere Profile und Modellversionen
+parallel gespeichert werden. Ein dimensionsspezifischer HNSW-Index kann später
+pro stabilem Embedding-Profil ergänzt werden.
 
 Die Modelle in `app/domain/semantic.py` definieren nur die Sprache der späteren
 semantischen Ergebnisse. Jedes Derived Object trägt eine

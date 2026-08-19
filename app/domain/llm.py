@@ -59,6 +59,7 @@ class ContextUnit(BaseModel):
     sequence: int = Field(ge=0)
     text: str
     parent_unit_id: UUID | None = None
+    speaker: str | None = None
 
 
 class SelectedContext(BaseModel):
@@ -123,7 +124,7 @@ class BoundaryDecision(BaseModel):
     decision_type: Literal["BOUNDARY"] = "BOUNDARY"
     left_unit_id: UUID
     right_unit_id: UUID
-    boundary: Literal["SAME_EPISODE", "NEW_EPISODE"]
+    boundary: Literal["SAME_EPISODE", "NEW_EPISODE", "UNCERTAIN"]
     confidence: float = Field(ge=0, le=1)
 
 
