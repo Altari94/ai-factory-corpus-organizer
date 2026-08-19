@@ -3,7 +3,7 @@
 Der Corpus Organizer ist der eigenständige F0.4-Service der AI Factory. Er
 bereitet den Canonical Corpus für spätere semantische Verarbeitung auf.
 
-## Aktueller Umfang: F0.4.0–F0.4.4
+## Aktueller Umfang: F0.4.0–F0.4.5
 
 F0.4.0 enthält ausschließlich das Service-Grundgerüst und die Anbindung an den
 stabilen Canonical Read Port aus F0.3:
@@ -20,6 +20,10 @@ stabilen Canonical Read Port aus F0.3:
 - Walking Skeleton für mehrere Canonical Sources
 - Trivial Episode Detector ohne KI
 - versioniertes Golden-Corpus-Format
+- Model Profiles, Context Selection und Chunk Builder
+- versionierte Prompt Builder
+- provider-neutraler `LLMPort` mit InMemory-Testadapter
+- strukturierte Output-Validierung und Execution Traces
 
 Noch nicht enthalten sind intelligente Episodenerkennung, Embeddings, LLMs oder
 semantische Entscheidungen. Die aktuelle Episodenerkennung ist bewusst nur der
