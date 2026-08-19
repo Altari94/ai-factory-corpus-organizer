@@ -42,6 +42,11 @@ transiente Fehler nutzt der Adapter begrenzte Exponential-Retries. Nach dem
 letzten Versuch wird ein `LLMProviderError` ausgelöst und der Boundary Judge
 führt keine Episode-Entscheidung aus.
 
+Der LLM-Trace enthält neben Tokenzahlen und Provider-Request-ID auch Latenz
+und tatsächliche Retry-Anzahl. Eine `estimated_cost_usd`-Angabe bleibt
+optional und muss über ein explizites Modellpreis-Profil konfiguriert werden;
+der Domain-Code schätzt keine Preise anhand von Modellnamen.
+
 ## Nutzung und Kosten
 
 Die Adapter sind implementiert und über Mock-Tests geprüft. Es wurde bewusst

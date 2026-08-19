@@ -116,6 +116,8 @@ class LLMResponse(BaseModel):
     input_tokens: int | None = Field(default=None, ge=0)
     output_tokens: int | None = Field(default=None, ge=0)
     provider_request_id: str | None = None
+    latency_ms: int | None = Field(default=None, ge=0)
+    retry_count: int = Field(default=0, ge=0)
 
 
 class BoundaryDecision(BaseModel):
@@ -175,6 +177,9 @@ class LLMExecutionTrace(BaseModel):
     status: LLMExecutionStatus
     input_tokens: int | None = Field(default=None, ge=0)
     output_tokens: int | None = Field(default=None, ge=0)
+    latency_ms: int | None = Field(default=None, ge=0)
+    retry_count: int = Field(default=0, ge=0)
+    estimated_cost_usd: float | None = Field(default=None, ge=0)
     raw_output: str | None = None
     structured_decision_id: UUID | None = None
     error: str | None = None

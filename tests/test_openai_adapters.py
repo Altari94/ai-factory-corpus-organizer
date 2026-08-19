@@ -75,6 +75,8 @@ def test_llm_adapter_uses_responses_structured_output_and_usage() -> None:
 
     assert response.provider_request_id == "resp_123"
     assert response.input_tokens == 12
+    assert response.latency_ms is not None
+    assert response.retry_count == 0
     assert captured["model"] == "gpt-test"
     assert captured["text"]["format"]["type"] == "json_schema"
     assert captured["text"]["format"]["strict"] is True

@@ -40,6 +40,8 @@ class ExecutionTraceService:
                 "status": LLMExecutionStatus.SUCCEEDED,
                 "input_tokens": response.input_tokens,
                 "output_tokens": response.output_tokens,
+                "latency_ms": response.latency_ms,
+                "retry_count": response.retry_count,
                 "raw_output": response.raw_output,
                 "structured_decision_id": decision.decision_id,
             }

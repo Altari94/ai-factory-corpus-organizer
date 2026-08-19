@@ -1,4 +1,5 @@
 import time
+from time import perf_counter
 from collections.abc import Callable
 
 from openai import APIConnectionError, APITimeoutError, InternalServerError, OpenAI, RateLimitError
@@ -26,6 +27,7 @@ class OpenAILLMAdapter:
     def generate(self, request: LLMRequest) -> LLMResponse:
         schema = _schema_for(request.prompt.task)
         last_error: Exception | None = None
+        started = perf_counter()
         for attempt in range(self.max_retries + 1):
             try:
                 response = self.client.responses.create(
@@ -55,6 +57,8 @@ class OpenAILLMAdapter:
                     input_tokens=getattr(usage, "input_tokens", None),
                     output_tokens=getattr(usage, "output_tokens", None),
                     provider_request_id=getattr(response, "id", None),
+                    latency_ms=round((perf_counter() - started) * 1000),
+                    retry_count=attempt,
                 )
             except LLMProviderError as error:
                 last_error = error
