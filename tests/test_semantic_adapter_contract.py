@@ -18,6 +18,7 @@ class FakeTable:
         self.operation = "select"
         self.payload = None
         self.filters: list[tuple[str, object]] = []
+        self.in_filters: list[tuple[str, list[object]]] = []
         self.limit_value: int | None = None
 
     def insert(self, payload):
@@ -36,6 +37,10 @@ class FakeTable:
 
     def eq(self, key, value):
         self.filters.append((key, value))
+        return self
+
+    def in_(self, key, values):
+        self.in_filters.append((key, values))
         return self
 
     def limit(self, value):
@@ -57,7 +62,7 @@ class FakeTable:
                     row.update(self.payload)
             return FakeResponse([])
         result = [
-            row for row in rows if all(str(row.get(key)) == str(value) for key, value in self.filters)
+            row for row in rows if all(str(row.get(key)) == str(value) for key, value in self.filters) and all(str(row.get(key)) in {str(value) for value in values} for key, values in self.in_filters)
         ]
         if self.limit_value is not None:
             result = result[: self.limit_value]

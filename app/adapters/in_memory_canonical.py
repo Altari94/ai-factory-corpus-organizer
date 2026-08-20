@@ -34,6 +34,10 @@ class InMemoryCanonicalAdapter:
     def get_unit(self, unit_id: UUID) -> CanonicalUnit | None:
         return next((unit for unit in self.units if unit.unit_id == unit_id), None)
 
+    def get_units_by_ids(self, unit_ids: list[UUID]) -> list[CanonicalUnit]:
+        wanted = set(unit_ids)
+        return [unit for unit in self.units if unit.unit_id in wanted]
+
     def get_units(self, processing_run_id: UUID) -> list[CanonicalUnit]:
         return sorted(
             [unit for unit in self.units if unit.processing_run_id == processing_run_id],

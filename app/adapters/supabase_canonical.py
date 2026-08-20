@@ -32,6 +32,17 @@ class SupabaseCanonicalReadAdapter(CanonicalReadPort):
         rows = self.client.table("content_units").select("*").eq("unit_id", str(unit_id)).limit(1).execute().data
         return self._unit(rows[0]) if rows else None
 
+    def get_units_by_ids(self, unit_ids: list[UUID]) -> list[CanonicalUnit]:
+        if not unit_ids:
+            return []
+        result: list[CanonicalUnit] = []
+        # Keep PostgREST query URLs bounded for real corpora with many evidence IDs.
+        for start in range(0, len(unit_ids), 100):
+            batch = unit_ids[start:start + 100]
+            rows = self.client.table("content_units").select("*").in_("unit_id", [str(unit_id) for unit_id in batch]).execute().data
+            result.extend(self._unit(row) for row in rows)
+        return result
+
     def get_units(self, processing_run_id: UUID) -> list[CanonicalUnit]:
         rows = self.client.table("content_units").select("*").eq("processing_run_id", str(processing_run_id)).order("sequence").execute().data
         return sorted((self._unit(row) for row in rows), key=lambda unit: (unit.sequence, str(unit.unit_id)))

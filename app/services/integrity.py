@@ -17,7 +17,6 @@ class OrganizerIntegrityService:
         episodes = self.semantic_reader.get_episodes(run_id)
         memberships = self.semantic_reader.get_episode_memberships(run_id)
         episode_ids = {item.episode_id for item in episodes}
-        unit_ids = {item.canonical_unit_id for item in memberships}
         topic_links = self.semantic_reader.get_episode_topics(run_id)
         topics = self.semantic_reader.get_topics(run_id)
         topic_ids = {item.topic_id for item in topics}
@@ -28,14 +27,20 @@ class OrganizerIntegrityService:
         threads = self.semantic_reader.get_threads(run_id)
         thread_ids = {item.thread_id for item in threads}
         thread_links = self.semantic_reader.get_thread_episodes(run_id)
+        referenced_unit_ids = {item.canonical_unit_id for item in memberships}
+        referenced_unit_ids.update(item.start_unit_id for item in episodes)
+        referenced_unit_ids.update(item.end_unit_id for item in episodes)
+        referenced_unit_ids.update(unit_id for item in entity_links for unit_id in item.evidence_unit_ids)
+        referenced_unit_ids.update(unit_id for item in relations for unit_id in item.evidence_unit_ids)
+        canonical_units = {item.unit_id: item for item in self.canonical_reader.get_units_by_ids(list(referenced_unit_ids))}
 
         checks = [
             IntegrityCheck(name="run_exists", passed=run is not None, detail="Organizer run exists."),
-            IntegrityCheck(name="episode_memberships", passed=all(link.episode_id in episode_ids and link.canonical_unit_id in unit_ids for link in memberships), detail="Episode memberships resolve to episodes and canonical units."),
-            IntegrityCheck(name="episode_boundaries", passed=all(item.start_unit_id in unit_ids and item.end_unit_id in unit_ids for item in episodes), detail="Episode boundaries resolve to canonical units."),
+            IntegrityCheck(name="episode_memberships", passed=all(link.episode_id in episode_ids and link.canonical_unit_id in canonical_units for link in memberships), detail="Episode memberships resolve to episodes and canonical units."),
+            IntegrityCheck(name="episode_boundaries", passed=all(self._episode_boundary_resolves(item, canonical_units) for item in episodes), detail="Episode boundaries resolve to canonical units in the episode document."),
             IntegrityCheck(name="topic_memberships", passed=all(link.topic_id in topic_ids and link.episode_id in episode_ids for link in topic_links), detail="Topic memberships resolve to topics and episodes."),
-            IntegrityCheck(name="entity_mentions", passed=all(link.entity_id in entity_ids and link.episode_id in episode_ids and set(link.evidence_unit_ids).issubset(unit_ids) for link in entity_links), detail="Entity mentions resolve to entities, episodes and evidence."),
-            IntegrityCheck(name="relations", passed=all(item.from_episode_id in episode_ids and item.to_episode_id in episode_ids and set(item.evidence_unit_ids).issubset(unit_ids) for item in relations), detail="Relations resolve to episodes and evidence."),
+            IntegrityCheck(name="entity_mentions", passed=all(link.entity_id in entity_ids and link.episode_id in episode_ids and set(link.evidence_unit_ids).issubset(canonical_units) for link in entity_links), detail="Entity mentions resolve to entities, episodes and evidence."),
+            IntegrityCheck(name="relations", passed=all(item.from_episode_id in episode_ids and item.to_episode_id in episode_ids and set(item.evidence_unit_ids).issubset(canonical_units) for item in relations), detail="Relations resolve to episodes and evidence."),
             IntegrityCheck(name="thread_memberships", passed=all(link.thread_id in thread_ids and link.episode_id in episode_ids for link in thread_links) and len({(link.thread_id, link.episode_id) for link in thread_links}) == len(thread_links), detail="Thread memberships are connected and unique."),
             IntegrityCheck(name="topic_hierarchy", passed=self._topic_hierarchy_is_acyclic(topics), detail="Topic parent relationships contain no cycle."),
         ]
@@ -59,3 +64,8 @@ class OrganizerIntegrityService:
                 seen.add(current)
                 current = parents.get(current)
         return True
+
+    def _episode_boundary_resolves(self, episode, canonical_units) -> bool:
+        start = canonical_units.get(episode.start_unit_id)
+        end = canonical_units.get(episode.end_unit_id)
+        return bool(start and end and start.document_id == episode.document_id and end.document_id == episode.document_id)
