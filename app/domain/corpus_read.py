@@ -43,6 +43,13 @@ class EpisodeView(BaseModel):
     provenance: list[SourceReference] = Field(default_factory=list)
 
 
+class SourceView(BaseModel):
+    source_id: UUID
+    source_title: str | None = None
+    document_ids: list[UUID] = Field(default_factory=list)
+    episode_ids: list[UUID] = Field(default_factory=list)
+
+
 class TopicNode(BaseModel):
     topic_id: UUID
     label: str

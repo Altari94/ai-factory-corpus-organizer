@@ -1,7 +1,7 @@
 from typing import Protocol
 from uuid import UUID
 
-from app.domain.corpus_read import CorpusCatalogue, CorpusSlice, EntityView, EpisodeView, ThreadView, TopicDetail, TopicNode
+from app.domain.corpus_read import CorpusCatalogue, CorpusSlice, EntityView, EpisodeView, SourceView, ThreadView, TopicDetail, TopicNode
 
 
 class CorpusReadPort(Protocol):
@@ -18,6 +18,8 @@ class CorpusReadPort(Protocol):
     def get_topic_episodes(self, run_id: UUID, topic_id: UUID) -> list[EpisodeView]: ...
 
     def get_episode(self, run_id: UUID, episode_id: UUID) -> EpisodeView | None: ...
+
+    def get_source(self, run_id: UUID, source_id: UUID) -> SourceView | None: ...
 
     def get_thread(self, run_id: UUID, thread_id: UUID) -> ThreadView | None: ...
 

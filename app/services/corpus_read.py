@@ -5,7 +5,7 @@ from uuid import UUID
 
 from app.domain.corpus_read import (
     CorpusCatalogue, CorpusSlice, ContentUnitView, EntityView, EpisodeView,
-    SourceReference, ThreadView, TopicDetail, TopicNode,
+    SourceReference, SourceView, ThreadView, TopicDetail, TopicNode,
 )
 from app.domain.semantic import Episode, OrganizerRun, Topic
 from app.ports.canonical_read import CanonicalReadPort
@@ -106,6 +106,21 @@ class CorpusReadService(CorpusReadPort):
             provenance[(document.source_id, document.document_id)] = SourceReference(source_id=document.source_id, document_id=document.document_id, source_title=document.title)
         timestamp = next((unit.original_timestamp for unit in units if unit.original_timestamp is not None), None)
         return EpisodeView(episode_id=episode.episode_id, document_id=episode.document_id, sequence=episode.sequence, timestamp=timestamp, topic_ids=topic_ids, thread_ids=thread_ids, content_units=units, provenance=list(provenance.values()))
+
+    def get_source(self, run_id: UUID, source_id: UUID) -> SourceView | None:
+        self._require_run(run_id)
+        episodes: list[Episode] = []
+        document_ids: set[UUID] = set()
+        title: str | None = None
+        for episode in self.semantic_reader.get_episodes(run_id):
+            document = self.canonical_reader.get_document(episode.document_id)
+            if document and document.source_id == source_id:
+                episodes.append(episode)
+                document_ids.add(document.document_id)
+                title = title or document.title
+        if not episodes:
+            return None
+        return SourceView(source_id=source_id, source_title=title, document_ids=sorted(document_ids, key=str), episode_ids=sorted((item.episode_id for item in episodes), key=lambda item: (next(ep.sequence for ep in episodes if ep.episode_id == item), str(item))))
 
     def get_thread(self, run_id: UUID, thread_id: UUID) -> ThreadView | None:
         self._require_run(run_id)

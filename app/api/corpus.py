@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.adapters.supabase_canonical import SupabaseCanonicalReadAdapter
 from app.adapters.semantic_factory import build_supabase_semantic_adapters
 from app.config.settings import get_settings
-from app.domain.corpus_read import CorpusCatalogue, CorpusSlice, EpisodeView, TopicDetail, TopicNode
+from app.domain.corpus_read import CorpusCatalogue, CorpusSlice, EpisodeView, SourceView, TopicDetail, TopicNode
 from app.domain.integrity import IntegrityReport
 from app.services.integrity import OrganizerIntegrityService
 from app.services.corpus_read import CorpusReadService
@@ -52,6 +52,22 @@ def get_corpus_slice(run_id: UUID, topic_id: UUID, include_descendants: bool = T
 @router.get("/{run_id}/corpus/catalogue", response_model=CorpusCatalogue)
 def get_corpus_catalogue(run_id: UUID, reader: Annotated[CorpusReadService, Depends(get_reader)]):
     return reader.get_catalogue(run_id)
+
+
+@router.get("/{run_id}/corpus/episodes/{episode_id}", response_model=EpisodeView)
+def get_episode(run_id: UUID, episode_id: UUID, reader: Annotated[CorpusReadService, Depends(get_reader)]):
+    result = reader.get_episode(run_id, episode_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Episode not found")
+    return result
+
+
+@router.get("/{run_id}/corpus/sources/{source_id}", response_model=SourceView)
+def get_source(run_id: UUID, source_id: UUID, reader: Annotated[CorpusReadService, Depends(get_reader)]):
+    result = reader.get_source(run_id, source_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Source not found")
+    return result
 
 
 @router.get("/{run_id}/integrity", response_model=IntegrityReport)
