@@ -68,6 +68,11 @@ class SupabaseSemanticAdapter:
         response = self.client.table("organizer_runs").select("*").eq("organizer_run_id", str(run_id)).limit(1).execute()
         return OrganizerRun.model_validate(response.data[0]) if response.data else None
 
+    def get_latest_successful_run(self, corpus_id: UUID, schema_version: str | None = None) -> OrganizerRun | None:
+        rows = self.client.table("organizer_runs").select("*").eq("corpus_id", str(corpus_id)).eq("status", "SUCCEEDED").order("finished_at", desc=True).limit(20).execute().data
+        runs = [OrganizerRun.model_validate(row) for row in rows if schema_version is None or str(row.get("semantic_schema_version", "")).split(".", 1)[0] == schema_version.split(".", 1)[0]]
+        return runs[0] if runs else None
+
     def get_episodes(self, run_id: UUID) -> list[Episode]:
         return self._read("episodes", run_id, Episode)
 

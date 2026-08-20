@@ -42,6 +42,9 @@ class FakeTable:
         self.limit_value = value
         return self
 
+    def order(self, _column, desc=False):
+        return self
+
     def execute(self):
         rows = self.database.setdefault(self.name, [])
         if self.operation == "insert":
@@ -99,6 +102,7 @@ def exercise_contract(adapter) -> None:
     assert stored_run is not None
     assert stored_run.status == OrganizerRunStatus.SUCCEEDED
     assert adapter.get_episodes(run.organizer_run_id) == [episode]
+    assert adapter.get_latest_successful_run(run.corpus_id).organizer_run_id == run.organizer_run_id
 
 
 def test_in_memory_and_supabase_adapters_share_the_same_contract() -> None:

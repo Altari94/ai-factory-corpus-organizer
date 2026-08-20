@@ -66,3 +66,11 @@ Execution Trace festgehalten. Der Episode Builder verarbeitet bestätigte
 `NEW_EPISODE`-Grenzen, bewahrt Reihenfolge und Provenienz und erzeugt für jede
 MESSAGE Unit genau eine Episode Membership. `SAME_EPISODE` und `UNCERTAIN`
 erzeugen keine neue Grenze.
+# Episode-Definition-Gate
+
+Der produktive `EpisodeBuilder` kann bestätigte Boundary-Judge-Entscheidungen
+verarbeiten. Der reale technische E2E-Runner verwendet dagegen ausdrücklich
+`windowed_baseline_v1_not_final_semantic_boundary`. Die 25-Nachrichten-Fenster
+sind damit eine reproduzierbare Vergleichsbasis, aber keine fachliche Definition
+einer Episode. Ein späterer Boundary-Judge-Lauf muss als neuer Organizer-Run
+mit eigener `algorithm_version` und eigener Konfiguration gespeichert werden.

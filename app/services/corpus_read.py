@@ -26,6 +26,9 @@ class CorpusReadService(CorpusReadPort):
             raise LookupError(f"Organizer run not found: {run_id}")
         return run
 
+    def get_latest_successful_run(self, corpus_id: UUID, schema_version: str | None = None) -> OrganizerRun | None:
+        return self.semantic_reader.get_latest_successful_run(corpus_id, schema_version)
+
     def _topic_maps(self, run_id: UUID):
         topics = self.semantic_reader.get_topics(run_id)
         links = self.semantic_reader.get_episode_topics(run_id)

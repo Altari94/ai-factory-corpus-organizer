@@ -79,6 +79,10 @@ class InMemorySemanticAdapter:
     def get_run(self, run_id: UUID) -> OrganizerRun | None:
         return self.runs.get(run_id)
 
+    def get_latest_successful_run(self, corpus_id: UUID, schema_version: str | None = None) -> OrganizerRun | None:
+        candidates = [run for run in self.runs.values() if run.corpus_id == corpus_id and run.status == OrganizerRunStatus.SUCCEEDED and (schema_version is None or run.semantic_schema_version.split(".", 1)[0] == schema_version.split(".", 1)[0])]
+        return max(candidates, key=lambda run: run.finished_at or run.started_at) if candidates else None
+
     def get_episodes(self, run_id: UUID) -> list[Episode]:
         return self._for_run(self.episodes, run_id)
 

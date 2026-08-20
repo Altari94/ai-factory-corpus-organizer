@@ -73,6 +73,8 @@ def main(arguments: list[str]) -> None:
             "purpose": "F0.4.18 real corpus technical acceptance",
             "source_ids": [str(item) for item in source_ids],
             "episode_window_size": WINDOW_SIZE,
+            "episode_definition": "windowed_baseline_v1_not_final_semantic_boundary",
+            "boundary_judge": "available_via_episode_builder_but_not_invoked_by_this_baseline",
             "relation_judge_limit": RELATION_JUDGE_LIMIT,
             "representatives_per_cluster": REPRESENTATIVES_PER_CLUSTER,
             "model": profile.model_name,
