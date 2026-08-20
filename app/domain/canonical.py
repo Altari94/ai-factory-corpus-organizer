@@ -19,6 +19,7 @@ class CanonicalRun(BaseModel):
     schema_version: str
     status: RunStatus
     started_at: datetime
+    finished_at: datetime | None = None
 
 
 class CanonicalDocument(BaseModel):
@@ -41,3 +42,7 @@ class CanonicalUnit(BaseModel):
     text: str
     parent_unit_id: UUID | None = None
     source_native_id: str | None = None
+    original_timestamp: datetime | None = None
+    speaker: str | None = None
+    role: str | None = None
+    source_locator: str | None = None

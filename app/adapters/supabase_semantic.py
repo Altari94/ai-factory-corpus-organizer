@@ -71,6 +71,9 @@ class SupabaseSemanticAdapter:
     def get_episodes(self, run_id: UUID) -> list[Episode]:
         return self._read("episodes", run_id, Episode)
 
+    def get_episode_memberships(self, run_id: UUID) -> list[EpisodeMembership]:
+        return self._read("episode_memberships", run_id, EpisodeMembership)
+
     def get_entities(self, run_id: UUID) -> list[Entity]:
         return self._read("entities", run_id, Entity)
 

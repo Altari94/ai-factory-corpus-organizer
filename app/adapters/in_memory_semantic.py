@@ -82,6 +82,9 @@ class InMemorySemanticAdapter:
     def get_episodes(self, run_id: UUID) -> list[Episode]:
         return self._for_run(self.episodes, run_id)
 
+    def get_episode_memberships(self, run_id: UUID) -> list[EpisodeMembership]:
+        return self._for_run(self.episode_memberships, run_id)
+
     def get_entities(self, run_id: UUID) -> list[Entity]:
         return self._for_run(self.entities, run_id)
 

@@ -31,6 +31,9 @@ class InMemoryCanonicalAdapter:
     def get_document(self, document_id: UUID) -> CanonicalDocument | None:
         return next((doc for doc in self.documents if doc.document_id == document_id), None)
 
+    def get_unit(self, unit_id: UUID) -> CanonicalUnit | None:
+        return next((unit for unit in self.units if unit.unit_id == unit_id), None)
+
     def get_units(self, processing_run_id: UUID) -> list[CanonicalUnit]:
         return sorted(
             [unit for unit in self.units if unit.processing_run_id == processing_run_id],
